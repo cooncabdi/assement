@@ -27,4 +27,149 @@
         <div class="mb-3">
           <input id="searchBox" type="search" class="form-control" placeholder="Search (filter by ID, name, or email)">
         </div>
+        <!-- TABLE -->
+        <div class="table-responsive">
+          <table id="studentsTable" class="table table-striped align-middle">
+            <thead>
+              <tr>
+                <th style="width:5%;">ID</th>
+                <th style="width:30%;">Name</th>
+                <th style="width:45%;">Email</th>
+                <th style="width:20%;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-id="1">
+                <td>1</td>
+                <td>maxamed ahmed</td>
+                <td>maxamed77@example.com</td>
+                <td>
+                  <button class="btn btn-sm btn-primary me-2">Edit</button>
+
+                  <!-- DELETE BUTTON with dropdown (hoos u dag) -->
+                  <div class="btn-group">
+                    <button id="delBtn1" type="button" class="btn btn-sm btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      Delete
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><span class="dropdown-item-text">Confirm delete?</span></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item text-danger confirm-delete" href="#" data-target-row="1">Yes, delete</a></li>
+                      <li><a class="dropdown-item cancel-delete" href="#">Cancel</a></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+
+              <tr data-id="2">
+                <td>2</td>
+                <td>ahmed mohmed </td>
+                <td>ahmed122@example.com</td>
+                <td>
+                  <button class="btn btn-sm btn-primary me-2">Edit</button>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      Delete
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><span class="dropdown-item-text">Confirm delete?</span></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item text-danger confirm-delete" href="#" data-target-row="2">Yes, delete</a></li>
+                      <li><a class="dropdown-item cancel-delete" href="#">Cancel</a></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+
+              <tr data-id="3">
+                <td>3</td>
+                <td>mustafe a/laahi</td>
+                <td>mustafe5@example.com</td>
+                <td>
+                  <button class="btn btn-sm btn-primary me-2">Edit</button>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      Delete
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><span class="dropdown-item-text">Confirm delete?</span></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item text-danger confirm-delete" href="#" data-target-row="3">Yes, delete</a></li>
+                      <li><a class="dropdown-item cancel-delete" href="#">Cancel</a></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ADD BUTTON -->
+        <div class="text-center mt-3">
+          <button id="addStudent" class="btn btn-primary">Add Student</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- INLINE JS: Search filter + Delete handler -->
+  <script>
+    // SEARCH FILTER: "gaar u jar" - markaas waxaa la sifeynayaa rows-ka jadwalka
+    (function(){
+      const searchBox = document.getElementById('searchBox');
+      const table = document.getElementById('studentsTable').getElementsByTagName('tbody')[0];
+
+      searchBox.addEventListener('input', function(){
+        const q = this.value.trim().toLowerCase();
+        // loop rows
+        Array.from(table.rows).forEach(row => {
+          const id = row.cells[0].textContent.toLowerCase();
+          const name = row.cells[1].textContent.toLowerCase();
+          const email = row.cells[2].textContent.toLowerCase();
+          // show row if any cell contains query
+          const match = (!q) || id.includes(q) || name.includes(q) || email.includes(q);
+          row.style.display = match ? '' : 'none';
+        });
+      });
+    })();
+
+    // DELETE HANDLER: marka user-gu riixo "Yes, delete" ka
+    (function(){
+      // konnesshinka elements-ka confirm-delete
+      const confirmLinks = document.querySelectorAll('.confirm-delete');
+      confirmLinks.forEach(link => {
+        link.addEventListener('click', function(e){
+          e.preventDefault();
+          const id = this.getAttribute('data-target-row');
+          // meesha row ku yaal
+          const row = document.querySelector('tr[data-id="'+id+'"]');
+          if(!row) return;
+          // Halkan waxaad ku dari kartaa ajax call si aad u tirtirto server-ka.
+          // Tusaale ahaan: fetch('/delete-student/'+id, { method:'DELETE' }) ...
+          // Haddana frontend kaliya: ka saar row DOM
+          row.remove();
+        });
+      });
+
+      // optional: cancel link close dropdown - default bootstrap behavior handles it
+      const cancelLinks = document.querySelectorAll('.cancel-delete');
+      cancelLinks.forEach(a => {
+        a.addEventListener('click', function(e){
+          e.preventDefault();
+          // just close dropdown by focusing somewhere else
+          document.activeElement.blur();
+        });
+      });
+    })();
+
+    // ADD STUDENT button (demo frontend only)
+    document.getElementById('addStudent').addEventListener('click', function(){
+      alert('This is a frontend demo. Implement add-student form or modal here.');
+    });
+  </script>
+</body>
+</html>
          …
